@@ -1,0 +1,64 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+}
+
+.main {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+}
+
+.chat {
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+}
+
+.name span {
+  margin-right: 10px;
+}
+
+.message-container {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.message-form {
+  display: flex;
+  align-items: center;
+}
+
+.message-input {
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.send-button {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.clients-total {
+  text-align: center;
+}
+
+.message {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  background-color: #f1f1f1;
+  margin-bottom: 5px;
+}

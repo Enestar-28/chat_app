@@ -4,26 +4,36 @@ const setupSocket = (server) => {
   const io = socketIO(server);
 
   const socketsConnected = new Set();
+
+  let clientsCount = 0;
+  let users = ["nguyen", "hai", "nhugn"];
+
   io.on("connection", (socket) => {
-    console.log("Socket connected", socket.id);
-    socketsConnected.add(socket.id);
-    io.emit("clients-total", socketsConnected.size);
+    clientsCount++;
+    users.push({ id: socket.id, name: "anonymous" }); // Default name is anonymous
+    io.emit("clients-total", clientsCount);
+    io.emit("users-list", users);
 
     socket.on("disconnect", () => {
-      console.log("Socket disconnected", socket.id);
-      socketsConnected.delete(socket.id);
-      io.emit("clients-total", socketsConnected.size);
+      clientsCount--;
+      users = users.filter((user) => user.id !== socket.id);
+      io.emit("clients-total", clientsCount);
+      io.emit("users-list", users);
     });
 
-      socket.on("message", (data) => {
-        console.log(data);
-      socket.broadcast.emit("chat-message", data);
+    socket.on("message", (message) => {
+      io.emit("chat-message", message);
     });
 
-    socket.on("feedback", (data) => {
-      socket.broadcast.emit("feedback", data);
+    socket.on("name-change", (name) => {
+      const user = users.find((user) => user.id === socket.id);
+      if (user) {
+        user.name = name;
+        io.emit("users-list", users);
+      }
     });
   });
+
   return io;
 };
 
