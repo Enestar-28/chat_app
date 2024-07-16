@@ -1,10 +1,10 @@
-import { addMessage, getMessages } from "../controllers/messageController"
+// import { addMessage, getMessages } from "../controllers/messageController"
 
 
 
-const router = require("express").Router();
+// const router = require("express").Router();
 
-router.post("/addmsg/", addMessage);
-router.post("/getmsg/", getMessages);
+// router.post("/addmsg/", addMessage);
+// router.post("/getmsg/", getMessages);
 
-export default router;
+// export default router;

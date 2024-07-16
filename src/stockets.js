@@ -3,33 +3,34 @@ import socketIO from "socket.io";
 const setupSocket = (server) => {
   const io = socketIO(server);
 
-  const socketsConnected = new Set();
-
-  let clientsCount = 0;
-  let users = ["nguyen", "hai", "nhugn"];
-
+  global.onlineUsers = new Map();
   io.on("connection", (socket) => {
-    clientsCount++;
-    users.push({ id: socket.id, name: "anonymous" }); // Default name is anonymous
-    io.emit("clients-total", clientsCount);
-    io.emit("users-list", users);
+    global.chatSocket = socket;
+
+    // When a user is added
+    socket.on("add-user", (userId) => {
+      onlineUsers.set(userId, { socketId: socket.id, isConnected: true });
+      console.log(userId);
+    });
+
+    socket.on("send-msg", (data) => {
+      const sendUserSocket = onlineUsers.get(data.to);
+      const timestamp = new Date().toISOString(); // Get current date and time
+
+      if (sendUserSocket) {
+        socket.to(sendUserSocket.socketId).emit("msg-recieve", {
+          msg: data.msg,
+          timestamp,
+        });
+      }
+    });
 
     socket.on("disconnect", () => {
-      clientsCount--;
-      users = users.filter((user) => user.id !== socket.id);
-      io.emit("clients-total", clientsCount);
-      io.emit("users-list", users);
-    });
-
-    socket.on("message", (message) => {
-      io.emit("chat-message", message);
-    });
-
-    socket.on("name-change", (name) => {
-      const user = users.find((user) => user.id === socket.id);
-      if (user) {
-        user.name = name;
-        io.emit("users-list", users);
+      for (let [userId, userInfo] of onlineUsers.entries()) {
+        if (userInfo.socketId === socket.id) {
+          onlineUsers.set(userId, { ...userInfo, isConnected: false });
+          break;
+        }
       }
     });
   });

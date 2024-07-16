@@ -1,17 +1,14 @@
 import express from "express";
 import authRouter from "./authRoute.js";
-import userRouter from "./chatRoute.js";
-
-
+// import chatRouter from "./chatRoute.js";
 
 const router = express.Router();
 
-router.get("/api/v0", (req, res) => {
+router.get("/api", (req, res) => {
   res.send("Shope web here!");
 });
 
-router.use("/api/v0/auth", authRouter);
-router.use("/api/v0/user", userRouter);
-
+router.use("/api/auth", authRouter);
+// router.use("/api/user", chatRouter);
 
 export default router;
