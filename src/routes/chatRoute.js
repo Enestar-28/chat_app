@@ -1,10 +1,14 @@
-// import { addMessage, getMessages } from "../controllers/messageController"
+import express from "express";
+import chatController from "../controllers/chatController.js";
+
+const router = express.Router();
+
+router.get("/messages", chatController.getMessages);
+router.post("/message", chatController.sendMessage);
+
+export default router;
 
 
 
-// const router = require("express").Router();
 
-// router.post("/addmsg/", addMessage);
-// router.post("/getmsg/", getMessages);
 
-// export default router;
